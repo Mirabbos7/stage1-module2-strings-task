@@ -34,13 +34,6 @@ public class MethodParser {
         parsedMap.put("returnType", parts[1]);
         parsedMap.put("methodName", parts[2]);
 
-        String arguments = signatureString.substring(signatureString.indexOf('(') + 1, signatureString.indexOf(')'));
-        String[] argumentParts = arguments.split(", ");
-        for (String argument : argumentParts) {
-            String[] argumentDetails = argument.split(" ");
-            parsedMap.put(argumentDetails[1], argumentDetails[0]);
-        }
-
         return new MethodSignature("public void main(String a)");
     }
 }
