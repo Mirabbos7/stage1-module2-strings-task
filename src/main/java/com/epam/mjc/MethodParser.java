@@ -1,5 +1,7 @@
 package com.epam.mjc;
 
+import java.util.HashMap;
+import java.util.Map;
 public class MethodParser {
 
     /**
@@ -19,7 +21,26 @@ public class MethodParser {
      * @param signatureString source string to parse
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
+
+    public static void main(String[] args) {
+        MethodParser methodParser = new MethodParser();
+        methodParser.parseFunction("public void mirabbos(string a, String b)");
+    }
     public MethodSignature parseFunction(String signatureString) {
-        throw new UnsupportedOperationException("You should implement this method.");
+        Map<String, String> parsedMap = new HashMap<>();
+        String[] parts = signatureString.split(" ");
+
+        parsedMap.put("accessModifier", parts[0]);
+        parsedMap.put("returnType", parts[1]);
+        parsedMap.put("methodName", parts[2]);
+
+        String arguments = signatureString.substring(signatureString.indexOf('(') + 1, signatureString.indexOf(')'));
+        String[] argumentParts = arguments.split(", ");
+        for (String argument : argumentParts) {
+            String[] argumentDetails = argument.split(" ");
+            parsedMap.put(argumentDetails[1], argumentDetails[0]);
+        }
+
+        return new MethodSignature("public void main(String a)");
     }
 }
