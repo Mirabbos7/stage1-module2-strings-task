@@ -25,11 +25,9 @@ public class MethodParser {
      * @param signatureString source string to parse
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
-    public MethodSignature parseMethodSignature(String signatureString) {
+    public MethodSignature parseFunction(String signatureString) {
         StringSplitter splitter = new StringSplitter();
         List<String> tokens = splitter.splitByDelimiters(signatureString, Arrays.asList("(", ")", ",", " "));
-
-        // Remove empty strings from the tokens list
         tokens.removeIf(String::isEmpty);
 
         String accessModifier = null;
@@ -39,21 +37,17 @@ public class MethodParser {
 
         int currentIndex = 0;
 
-        // Determine if the first token is an access modifier
         if (tokens.get(0).matches("public|private|protected")) {
             accessModifier = tokens.get(0);
             currentIndex++;
         }
 
-        // The next token must be the return type
         returnType = tokens.get(currentIndex);
         currentIndex++;
 
-        // The next token must be the method name
         methodName = tokens.get(currentIndex);
         currentIndex++;
 
-        // The rest are arguments, pair them up
         while (currentIndex < tokens.size()) {
             String type = tokens.get(currentIndex);
             currentIndex++;
