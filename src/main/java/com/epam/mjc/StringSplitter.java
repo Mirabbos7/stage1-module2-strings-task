@@ -14,6 +14,10 @@ public class StringSplitter {
      * @param delimiters collection of delimiter strings
      * @return List of substrings
      */
+    public static void main(String[] args) {
+        StringSplitter stringSplitter = new StringSplitter();
+        System.out.println(stringSplitter.splitByDelimiters("private void log(String logString, LogLevel level, Context context)", List.of(" ", ")", "(")));
+    }
     public List<String> splitByDelimiters(String source, Collection<String> delimiters) {
         List<String> result = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(source, String.join("", delimiters));
