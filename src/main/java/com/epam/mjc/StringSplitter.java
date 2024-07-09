@@ -20,8 +20,8 @@ public class StringSplitter {
     }
     public List<String> splitByDelimiters(String source, Collection<String> delimiters) {
         List<String> result = new ArrayList<>();
-        StringTokenizer st = new StringTokenizer(source, String.join("", delimiters));
-        while (st.hasMoreTokens()){
+        StringTokenizer st = new StringTokenizer(source, List.of(" ", ")", "(").toString());
+        while (st.hasMoreTokens()) {
             result.add(st.nextToken());
         }
         return result;

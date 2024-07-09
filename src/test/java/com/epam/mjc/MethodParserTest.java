@@ -9,7 +9,7 @@ public class MethodParserTest extends TestCase {
 
     @Test
     public void testParseFunction() {
-        MethodSignature signature = parser.parseFunction("private void log(String logString, LogLevel level, Context context)");
+        MethodSignature signature = parser.parseMethodSignature("private void log(String logString, LogLevel level, Context context)");
         assertEquals(signature.getAccessModifier(), "private");
         assertEquals(signature.getReturnType(), "void");
         assertEquals(signature.getMethodName(), "log");
@@ -21,7 +21,7 @@ public class MethodParserTest extends TestCase {
 
     @Test
     public void testParseFunctionNoAccessModifier() {
-        MethodSignature signature = parser.parseFunction("String repeat(String value, int times)");
+        MethodSignature signature = parser.parseMethodSignature("String repeat(String value, int times)");
         assertNull(signature.getAccessModifier());
         assertEquals(signature.getReturnType(), "String");
         assertEquals(signature.getMethodName(), "repeat");
@@ -32,7 +32,7 @@ public class MethodParserTest extends TestCase {
 
     @Test
     public void testParseFunctionNoArguments() {
-        MethodSignature signature = parser.parseFunction("public float mark()");
+        MethodSignature signature = parser.parseMethodSignature("public float mark()");
         assertEquals(signature.getAccessModifier(), "public");
         assertEquals(signature.getReturnType(), "float");
         assertEquals(signature.getMethodName(), "mark");
