@@ -1,6 +1,7 @@
 package com.epam.mjc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,36 +26,46 @@ public class MethodParser {
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
     public MethodSignature parseMethodSignature(String signatureString) {
+        StringSplitter splitter = new StringSplitter();
+        List<String> tokens = splitter.splitByDelimiters(signatureString, Arrays.asList("(", ")", ",", " "));
+
+        // Remove empty strings from the tokens list
+        tokens.removeIf(String::isEmpty);
+
         String accessModifier = null;
-        String returnType;
+        String returnType = null;
         String methodName;
         List<MethodSignature.Argument> arguments = new ArrayList<>();
 
-        String regex = "(\\w+ )?(\\w+ )?(\\w+)\\(([^)]*)\\)";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(signatureString);
+        int currentIndex = 0;
 
-        if (matcher.find()) {
-            accessModifier = matcher.group(1) != null ? matcher.group(1).trim() : null;
-            returnType = matcher.group(2) != null ? matcher.group(2).trim() : null;
-            methodName = matcher.group(3);
-
-            String args = matcher.group(4).trim();
-            if (!args.isEmpty()) {
-                String[] argsArray = args.split(",");
-                for (String arg : argsArray) {
-                    String[] argParts = arg.trim().split("\\s+");
-                    if (argParts.length == 2) {
-                        arguments.add(new MethodSignature.Argument(argParts[0], argParts[1]));
-                    }
-                }
-            }
-
-            MethodSignature methodSignature = new MethodSignature(methodName, arguments);
-            methodSignature.setAccessModifier(accessModifier);
-            methodSignature.setReturnType(returnType);
-            return methodSignature;
+        // Determine if the first token is an access modifier
+        if (tokens.get(0).matches("public|private|protected")) {
+            accessModifier = tokens.get(0);
+            currentIndex++;
         }
-        throw new IllegalArgumentException("Invalid method signature: " + signatureString);
+
+        // The next token must be the return type
+        returnType = tokens.get(currentIndex);
+        currentIndex++;
+
+        // The next token must be the method name
+        methodName = tokens.get(currentIndex);
+        currentIndex++;
+
+        // The rest are arguments, pair them up
+        while (currentIndex < tokens.size()) {
+            String type = tokens.get(currentIndex);
+            currentIndex++;
+            String name = tokens.get(currentIndex);
+            currentIndex++;
+            arguments.add(new MethodSignature.Argument(type, name));
+        }
+
+        MethodSignature methodSignature = new MethodSignature(methodName, arguments);
+        methodSignature.setAccessModifier(accessModifier);
+        methodSignature.setReturnType(returnType);
+
+        return methodSignature;
     }
 }
